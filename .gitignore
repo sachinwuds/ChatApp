@@ -1,0 +1,36 @@
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+.venv/
+env/
+.env/
+
+# IDE or editor files
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# Docker files
+.dockerignore
+docker-compose.override.yml
+
+# Dependency directories
+.tox/
+.nox/
+.coverage
+.hypothesis/
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+
+# Environment variable files
+.env
+.env.*
