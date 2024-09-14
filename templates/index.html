@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Application</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #messages { border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: scroll; }
+        #input { width: calc(100% - 50px); padding: 5px; }
+    </style>
+</head>
+<body>
+    <h2>Real-time Chat</h2>
+    <div id="login">
+        <input type="text" id="username" placeholder="Enter username" />
+        <button onclick="joinChat()">Join Chat</button>
+    </div>
+    <div id="chat" style="display: none;">
+        <div id="messages"></div>
+        <input type="text" id="input" placeholder="Type a message..." />
+        <button onclick="sendMessage()">Send</button>
+    </div>
+    <div id="privatechat" style="display: none;">
+        <input type="text" id="private_username" placeholder="Private message to..." />
+        <input type="text" id="private_message" placeholder="Type a private message..." />
+        <button onclick="sendPrivateMessage()">Send Private</button>
+    </div>
+
+    <script>
+        let ws;
+
+        function joinChat() {
+            const username = document.getElementById('username').value;
+            if (!username) return alert('Please enter a username');
+            
+            ws = new WebSocket(`ws://localhost:8000/ws/chat/${username}`);
+            ws.onmessage = function(event) {
+                const messagesDiv = document.getElementById('messages');
+                const message = document.createElement('div');
+                message.textContent = event.data;
+                messagesDiv.appendChild(message);
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            };
+
+            document.getElementById('login').style.display = 'none';
+            document.getElementById('chat').style.display = 'block';
+            document.getElementById('privatechat').style.display = 'block';
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('input');
+            ws.send(input.value);
+            input.value = '';
+        }
+
+        function sendPrivateMessage() {
+        const privateUsername = document.getElementById('private_username');
+        const privateMessage = document.getElementById('private_message');
+        if (privateMessage.value){
+        ws.send(`/private ${privateUsername.value} ${privateMessage.value}`);
+        // privateUsername.value = '';
+        privateMessage.value = '';
+        }
+    }
+    </script>
+</body>
+</html>
